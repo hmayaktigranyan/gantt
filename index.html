@@ -22,7 +22,6 @@
 </head>
 <body>
 	<div class="container">
-		<h2>Interactive Gantt Chart entirely made in SVG!</h2>
 		<div class="gantt-target"></div>
 	</div>
 	<script>
@@ -75,31 +74,19 @@
 				dependencies: 'Task 4',
 				custom_class: 'bar-milestone'
 			},
-			{
-				start: '2014-01-05',
-				end: '2019-10-12',
-				name: 'Long term task',
-				id: "Task 6",
-				progress: 0
-			}
 		]
 		var gantt_chart = new Gantt(".gantt-target", tasks, {
-			on_click: function (task) {
-				console.log(task);
-			},
-			on_date_change: function(task, start, end) {
-				console.log(task, start, end);
-			},
-			on_progress_change: function(task, progress) {
-				console.log(task, progress);
-			},
-			on_view_change: function(mode) {
-				console.log(mode);
-			},
-			view_mode: 'Month',
-			language: 'en'
+			view_mode: 'Day',
+			language: 'en',
+			custom_popup_html: (task, start, end) => {
+				return `
+					<div>
+						<h4>Start: ${task.start}</h4>
+						<h4>End: ${task.end}</h4>
+					</div>
+				`
+			}
 		});
-		console.log(gantt_chart);
 	</script>
 </body>
 </html>
