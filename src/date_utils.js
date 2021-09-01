@@ -279,6 +279,10 @@ export default {
     },
 
     get_date_values(date) {
+        if (!date) {
+            return Array.from({ length: 7 }).fill(0)
+        }
+
         return [
             date.getFullYear(),
             date.getMonth(),

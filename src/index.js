@@ -92,6 +92,11 @@ export default class Gantt {
     }
 
     setup_tasks(tasks) {
+        if (!Array.isArray(tasks) || Array.isArray(tasks) && !tasks.length) {
+            this.tasks = []
+            return
+        }
+
         // prepare tasks
         this.tasks = tasks.map((task, i) => {
             // convert to Date objects
@@ -172,6 +177,9 @@ export default class Gantt {
     }
 
     change_view_mode(mode = this.options.view_mode) {
+        if (!this.tasks.length) {
+            return
+        }
         this.update_view_scale(mode);
         this.setup_dates();
         this.render();
@@ -209,6 +217,8 @@ export default class Gantt {
     }
 
     setup_gantt_dates() {
+        if (!this.tasks.length) return
+
         this.gantt_start = this.gantt_end = null;
 
         for (let task of this.tasks) {
@@ -678,7 +688,7 @@ export default class Gantt {
                 is_allow_change_position = false
             }
 
-            Array.from(document.querySelectorAll('.bar-wrapper')).forEach(el => el.classList.remove('open'))
+            this.$container.querySelectorAll('.bar-wrapper').forEach(el => el.classList.remove('open'))
             bar_wrapper.classList.add('active', 'open');
 
             x_on_start = e.offsetX;
@@ -745,8 +755,8 @@ export default class Gantt {
             });
         });
 
-        document.addEventListener('mouseup', e => {
-            if (is_dragging || is_resizing_left || is_resizing_right) {
+        document.addEventListener('mouseup', () => {
+            if (action_in_progress()) {
                 bars.forEach(bar => bar.group.classList.remove('active'));
             }
 
@@ -755,7 +765,7 @@ export default class Gantt {
             is_resizing_right = false;
         });
 
-        $.on(this.$svg, 'mouseup', e => {
+        $.on(this.$svg, 'mouseup', () => {
             this.bar_being_dragged = null;
             bars.forEach(bar => {
                 const $bar = bar.$bar;

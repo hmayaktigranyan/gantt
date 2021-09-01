@@ -75,9 +75,12 @@
 				custom_class: 'bar-milestone'
 			},
 		]
-		var gantt_chart = new Gantt(".gantt-target", tasks, {
+		var gantt_chart = new Gantt(".gantt-target", 7, {
 			view_mode: 'Day',
 			language: 'en',
+			on_date_change (e) {
+				console.log('on', e)
+			},
 			custom_popup_html: (task, start, end) => {
 				return `
 					<div>
@@ -87,6 +90,7 @@
 				`
 			}
 		});
+
 	</script>
 </body>
 </html>
