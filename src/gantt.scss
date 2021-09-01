@@ -147,6 +147,7 @@ $handle-color: #ddd !default;
 		padding: 0;
 		color: #959da5;
 		border-radius: 3px;
+		pointer-events: none;
 
 		.title {
 			border-bottom: 3px solid $blue;

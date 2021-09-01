@@ -22,9 +22,15 @@
 </head>
 <body>
 	<div class="container">
+		<button onclick="changeMode('Week')">Week</button>
+		<button onclick="changeMode('Month')">Month</button>
 		<div class="gantt-target"></div>
 	</div>
 	<script>
+		function changeMode(mode) {
+			console.log(gantt_chart)
+			gantt_chart.change_view_mode(mode)
+		}
 		var tasks = [
 			{
 				start: '2018-10-01',
