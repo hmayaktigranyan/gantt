@@ -3,7 +3,8 @@
 .gantt .grid-header {
   fill: #ffffff;
   stroke: #e0e0e0;
-  stroke-width: 1.4; }
+  stroke-width: 1.4;
+  clip-path: polygon(1px 1px, calc(100% - 1px) 1px, calc(100% - 1px) 100%, 1px 100%); }
 .gantt .grid-row {
   fill: #ffffff; }
 .gantt .grid-row:nth-child(even) {
