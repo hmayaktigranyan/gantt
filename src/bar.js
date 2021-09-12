@@ -372,16 +372,13 @@ export default class Bar {
     }
 
     update_label_position() {
-        const bar = this.$bar,
-            label = this.group.querySelector('.bar-label');
-
-        if (label.getBBox().width > bar.getWidth()) {
-            label.classList.add('big');
-            label.setAttribute('x', bar.getX() + bar.getWidth() + 5);
-        } else {
-            label.classList.remove('big');
-            label.setAttribute('x', bar.getX() + bar.getWidth() / 2);
-        }
+        const bar = this.$bar
+        const label = this.group.querySelector('.bar-label');
+        const currentText = this.task.name.substring(0, bar.getWidth() / 6)
+        const isFullText = currentText.length === this.task.name.length
+        
+        label.innerHTML = `${currentText}${isFullText ? '' : '...'}`
+        label.setAttribute('x', bar.getX() + bar.getWidth() / 2);
     }
 
     update_handle_position() {

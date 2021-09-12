@@ -836,16 +836,13 @@ class Bar {
     }
 
     update_label_position() {
-        const bar = this.$bar,
-            label = this.group.querySelector('.bar-label');
-
-        if (label.getBBox().width > bar.getWidth()) {
-            label.classList.add('big');
-            label.setAttribute('x', bar.getX() + bar.getWidth() + 5);
-        } else {
-            label.classList.remove('big');
-            label.setAttribute('x', bar.getX() + bar.getWidth() / 2);
-        }
+        const bar = this.$bar;
+        const label = this.group.querySelector('.bar-label');
+        const currentText = this.task.name.substring(0, bar.getWidth() / 6);
+        const isFullText = currentText.length === this.task.name.length;
+        
+        label.innerHTML = `${currentText}${isFullText ? '' : '...'}`;
+        label.setAttribute('x', bar.getX() + bar.getWidth() / 2);
     }
 
     update_handle_position() {
@@ -1480,12 +1477,21 @@ class Gantt {
         for (let date of this.get_dates_to_draw()) {
             createSVG('text', {
                 x: date.lower_x,
-                y: date.lower_y,
+                y: date.day_of_week ? date.lower_y : date.lower_y + 6,
                 innerHTML: date.lower_text,
                 class: 'lower-text',
                 append_to: this.layers.date
             });
-
+            
+            if (date.lower_text && date.day_of_week) {
+                createSVG('text', {
+                    x: date.lower_x - 10,
+                    y: date.lower_y + 14,
+                    innerHTML: date.day_of_week,
+                    class: 'day-of-week-text',
+                    append_to: this.layers.date
+                });
+            }
             if (date.upper_text) {
                 const $upper_text = createSVG('text', {
                     x: date.upper_x,
@@ -1513,6 +1519,11 @@ class Gantt {
             return d;
         });
         return dates;
+    }
+
+    getDayOfWeek(date) {
+        const days_of_week = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+        return days_of_week[date.getDay()]
     }
 
     get_date_info(date, last_date, i) {
@@ -1570,8 +1581,8 @@ class Gantt {
 
         const base_pos = {
             x: i * this.options.column_width,
-            lower_y: this.options.header_height,
-            upper_y: this.options.header_height - 25
+            lower_y: this.options.header_height - 10,
+            upper_y: this.options.header_height - 28
         };
 
         const x_pos = {
@@ -1589,13 +1600,16 @@ class Gantt {
             Year_upper: this.options.column_width * 30 / 2
         };
 
+        const exclude_day_of_week_for_view_mode = ['Month', 'Half Day', 'Quarter Day'];
+
         return {
             upper_text: date_text[`${this.options.view_mode}_upper`],
             lower_text: date_text[`${this.options.view_mode}_lower`],
             upper_x: base_pos.x + x_pos[`${this.options.view_mode}_upper`],
             upper_y: base_pos.upper_y,
             lower_x: base_pos.x + x_pos[`${this.options.view_mode}_lower`],
-            lower_y: base_pos.lower_y
+            lower_y: base_pos.lower_y,
+            day_of_week: exclude_day_of_week_for_view_mode.includes(this.options.view_mode) ? '' : this.getDayOfWeek(date)
         };
     }
 

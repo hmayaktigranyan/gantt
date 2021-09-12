@@ -84,9 +84,6 @@
 		var gantt_chart = new Gantt(".gantt-target", tasks, {
 			view_mode: 'Day',
 			language: 'en',
-			on_date_change (e) {
-				console.log('on', e)
-			},
 			custom_popup_html: (task, start, end) => {
 				return `
 					<div>
